@@ -1,23 +1,38 @@
-#include <msp430.h> 
+#include <msp430.h>
 
+#include "GPIO_Driver.h"
 
-/**
- * main.c
- */
+//--------------------------------------------------------------------------
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;	// stop watchdog timer
-	int a = 32;
-	int b;
-	unsigned int c = 0xFFFF;
-	unsigned char d = 0x00;
-	int e = 10;
-	float f = 10.1;
-	int g = 0;
-	float h = 0.0;
+WDTCTL = WDTPW | WDTHOLD;
 
-	a += 1;
-	b = 17/2;
-	
-	while(1);
+PM5CTL0 &= ~LOCKLPM5;                   // Disable the GPIO power-on default high-impedance mode
+                                           // to activate previously configured port settings
+
+gpioInitIn(4,BIT1); //input
+gpioInitIn(2,BIT3); //input
+gpioInitOut(2,BIT1); //output
+gpioInitOut(6,BIT6); //output
+
+unsigned char value = 0;
+while(1){
+    value = gpioInitStatus(4, BIT1);
+
+        if(value == 0x00){
+            _delay_cycles(5000);
+
+            gpioWrite(2, BIT1, 1); }
+
+            else
+            gpioWrite(2, BIT1, 0);
+        _delay_cycles(5000);
+
 }
+return 0;
+}
+
+
+
+
+
